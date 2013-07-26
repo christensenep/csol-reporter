@@ -1,6 +1,4 @@
-import statistics_by_property
-import csv
-import operator
+from report import Report
 
 def createReport(openbadgerDB, csolDB):
   badges = openbadgerDB.badges
@@ -18,14 +16,15 @@ def createReport(openbadgerDB, csolDB):
               
   results = badgeinstances.aggregate(pipeline)['result']
 
+  report = Report('Learners by STEAM Badges Earned', 2)
+  
   countList = [0,0,0,0,0]
   
   for row in results:
     countList[row['_id']-1] = row['count']
   
-  with open('./output/learners_by_steam_count.csv', 'wb') as file:
-    writer = csv.writer(file)
-    writer.writerow(['STEAM Badges Earned', 'Number of Learners'])
-    
-    for i in range(len(countList)):
-      writer.writerow([i+1, countList[i]])
+  for i in range(len(countList)):
+    report.addRow([i+1, countList[i]])
+
+  return report
+  

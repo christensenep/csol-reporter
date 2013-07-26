@@ -1,6 +1,4 @@
-import statistics_by_property
-import csv
-import operator
+from report import Report
 
 def createReport(openbadgerDB, csolDB):
   cur = csolDB.cursor()
@@ -13,18 +11,19 @@ def createReport(openbadgerDB, csolDB):
 		              "WHEN age > 24 THEN 'Over 24' "
                   "END AS age_range, "
                   "COUNT(*) AS count "
-                  "FROM (SELECT TIMESTAMPDIFF(YEAR, birthday, CURDATE()) AS age FROM Learners) AS derived "
+                  "FROM (SELECT TIMESTAMPDIFF(YEAR, birthday, CURDATE()) AS age FROM csol.Learners) AS derived "
                   "GROUP BY age_range "
                   "ORDER BY FIELD(age_range, 'Under 13', '13-17', '18-24', 'Over 24'); ")
                 
   cur.execute(queryString)
 
-  with open('./output/learners_by_age.csv', 'wb') as file:
-    writer = csv.writer(file)
-    writer.writerow(['Age', 'Number of Learners'])
+  report = Report('Learners by Age', 2)
+  
+  for row in cur.fetchall():
+    age = row[0]
+    count = row[1]
     
-    for row in cur.fetchall():
-      age = row[0]
-      count = row[1]
-
-      writer.writerow([age, count])
+    report.addRow([age, count])
+  
+  return report
+  

@@ -1,15 +1,17 @@
-import statistics_by_property
-import csv
-import operator
+from report import Report
+import helper_queries
+
 
 def createReport(openbadgerDB, csolDB):
-  badgesBySchool = statistics_by_property.getBadgesByProperty('school')
-  learnersBySchool = statistics_by_property.getLearnersByProperty('school')
-  activeLearnersBySchool = statistics_by_property.getLearnersByProperty('school', badgeThreshold=1)
+  badgesBySchool = helper_queries.getBadgesByProperty('school')
+  learnersBySchool = helper_queries.getLearnersByProperty('school')
+  activeLearnersBySchool = helper_queries.getLearnersByProperty('school', badgeThreshold=1)
   
-  with open('./output/statistics_by_school.csv', 'wb') as file:
-    writer = csv.writer(file)
-    writer.writerow(['School', 'Number of Badges Awarded', 'Number of Learners', 'Number of Learners With At Least One Badge'])
-    
-    for school in learnersBySchool:
-      writer.writerow([school.title(), badgesBySchool[school], learnersBySchool[school], activeLearnersBySchool[school]])
+  report = Report('Statistics by School', 4)
+  
+  schools = sorted(learnersBySchool.keys())
+  
+  for school in schools:
+    report.addRow([school.title().decode('latin-1'), badgesBySchool[school], learnersBySchool[school], activeLearnersBySchool[school]])
+  
+  return report

@@ -1,15 +1,19 @@
-import statistics_by_property
-import csv
-import operator
+from report import Report
+import helper_queries
+
 
 def createReport(openbadgerDB, csolDB):
-  badgesByZip = statistics_by_property.getBadgesByProperty('zipCode')
-  learnersByZip = statistics_by_property.getLearnersByProperty('zipCode')
-  activeLearnersByZip = statistics_by_property.getLearnersByProperty('zipCode', badgeThreshold=1)
+  badgesByZip = helper_queries.getBadgesByProperty('zipCode')
+  learnersByZip = helper_queries.getLearnersByProperty('zipCode')
+  activeLearnersByZip = helper_queries.getLearnersByProperty('zipCode', badgeThreshold=1)
   
-  with open('./output/statistics_by_zip.csv', 'wb') as file:
-    writer = csv.writer(file)
-    writer.writerow(['Zip Code', 'Number of Badges Awarded', 'Number of Learners', 'Number of Learners With At Least One Badge'])
+  report = Report('Statistics by Zip', 4)
+  
+  zips = sorted(learnersByZip.keys())
+    
+  for zip in zips:
+    report.addRow([zip, badgesByZip[zip], learnersByZip[zip], activeLearnersByZip[zip]])
+  
+  return report
+  
 
-    for zip in learnersByZip:
-      writer.writerow([zip, badgesByZip[zip], learnersByZip[zip], activeLearnersByZip[zip]])

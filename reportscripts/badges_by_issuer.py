@@ -1,7 +1,6 @@
-import statistics_by_property
-import csv
-import operator
+from report import Report
 from collections import defaultdict
+import operator
 
 def createReport(openbadgerDB, csolDB):
   
@@ -30,10 +29,12 @@ def createReport(openbadgerDB, csolDB):
   for document in badgeinstanceDocuments:
     issuerCounts[badgeMap[document['badge']]] += 1
   
-  with open('./output/badges_by_issuer.csv', 'wb') as file:
-    writer = csv.writer(file)
-    writer.writerow(['Issuer', 'Number of Badges Issued'])
-    
-    for issuer, count in issuerCounts.iteritems():
+  sortedIssuerCounts = sorted(issuerCounts.iteritems(), key=operator.itemgetter(1), reverse=True)
+  
+  report = Report('Top Badge Issuers', 2)
+  
+  for issuer, count in sortedIssuerCounts:
+    report.addRow([issuer, count])
+  
+  return report
 
-      writer.writerow([issuer, count])
