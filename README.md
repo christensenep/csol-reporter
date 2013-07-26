@@ -1,11 +1,12 @@
 This reporter will run all the scripts in the /reportscripts folder, each of which can compile a report from data in the openbadger and CSOL databases.  Each report is then uploaded to a Google Spreadsheet specified in the config file.
 
+Run with:
 
 ```bash
 python ./report.py
 ```
 
-Sample config.py:
+Sample config.py, which should be placed in the base directory:
 
 ```bash
 OPENBADGER_MONGO_HOST = 'blah.blug.com'
