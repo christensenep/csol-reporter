@@ -1,6 +1,6 @@
 This reporter will run all the scripts in the /reportscripts folder, each of which can compile a report from data in the openbadger and CSOL databases.  Each report is then uploaded to a Google Spreadsheet specified in the config file.
 
-Requires that the python libraries google-api-python-clientm gdata, pymongo, and mysqldb are installed.
+Requires that the python libraries google-api-python-client, gdata, pymongo, and mysqldb are installed.
 
 Run with:
 
