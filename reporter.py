@@ -92,6 +92,9 @@ def runScripts():
 
         rowNum = 2
         for row in reportRows:
+          if rowNum % 1000 == 1:
+            _spreadsheetClient.Batch(batchUpdate, force=True)
+            batchUpdate = gdata.spreadsheets.data.BuildBatchCellsUpdate(config.GOOGLE_SPREADSHEET_KEY, worksheet.GetWorksheetId())
           colNum = 1
           for value in row:
             if isinstance( value, ( int, long ) ):
@@ -99,7 +102,7 @@ def runScripts():
             batchUpdate.AddSetCell(rowNum, colNum, value)
             colNum += 1
           rowNum += 1
-        
+          
         _spreadsheetClient.Batch(batchUpdate, force=True)
   
 init()
